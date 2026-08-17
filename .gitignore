@@ -6,3 +6,6 @@ credentials.json
 USERS.txt
 client_secret_*.json
 get-token.js
+package-auth-dependencies.txt
+README_LOGIN.txt
+README.txt

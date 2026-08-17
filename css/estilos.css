@@ -33,3 +33,7 @@ body {
             background: #111;
             color: white;
         }
+
+#usuarioActual {
+    opacity: .9;
+}

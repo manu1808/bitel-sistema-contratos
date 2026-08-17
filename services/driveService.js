@@ -11,13 +11,9 @@ async function crearCarpetaDrive(drive, nombre) {
         fields: 'id, webViewLink'
     });
 
-    await drive.permissions.create({
-        fileId: response.data.id,
-        requestBody: {
-            role: 'reader',
-            type: 'anyone'
-        }
-    });
+    // IMPORTANTE:
+    // No se crea permiso "anyone". Los documentos quedan sujetos
+    // a los permisos de Google Drive de la organización.
 
     return {
         id: response.data.id,
@@ -38,13 +34,8 @@ async function subirArchivoDrive(drive, filePath, fileName, folderId) {
         fields: 'id, webViewLink'
     });
 
-    await drive.permissions.create({
-        fileId: response.data.id,
-        requestBody: {
-            role: 'reader',
-            type: 'anyone'
-        }
-    });
+    // No hacemos público el archivo.
+    // El acceso dependerá de los permisos de la carpeta de Drive.
 
     return response.data;
 }

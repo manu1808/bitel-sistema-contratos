@@ -1,7 +1,26 @@
+const bcrypt = require('bcryptjs');
 const { pool } = require('../config/database');
 
 async function initializeDatabase() {
     try {
+        // =====================================================
+        // TABLA USUARIOS
+        // =====================================================
+
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(100) NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL,
+                nombre VARCHAR(255) NOT NULL,
+                rol VARCHAR(50) NOT NULL DEFAULT 'USUARIO',
+                activo BOOLEAN NOT NULL DEFAULT TRUE,
+                ultimo_login TIMESTAMP,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
         // =====================================================
         // TABLA CONTRATOS
         // =====================================================
@@ -33,7 +52,6 @@ async function initializeDatabase() {
                 contrato_id INTEGER NOT NULL
                     REFERENCES contratos(id)
                     ON DELETE CASCADE,
-
                 fecha_programada DATE NOT NULL,
                 fecha_pago DATE,
                 monto NUMERIC(12,2),
@@ -54,7 +72,6 @@ async function initializeDatabase() {
                 contrato_id INTEGER NOT NULL
                     REFERENCES contratos(id)
                     ON DELETE CASCADE,
-
                 tipo VARCHAR(100) NOT NULL,
                 nombre VARCHAR(255) NOT NULL,
                 drive_file_id TEXT,
@@ -62,10 +79,6 @@ async function initializeDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-
-        // =====================================================
-        // ÍNDICES
-        // =====================================================
 
         await pool.query(`
             CREATE INDEX IF NOT EXISTS idx_pagos_contrato
@@ -77,6 +90,55 @@ async function initializeDatabase() {
             ON documentos(contrato_id)
         `);
 
+        // =====================================================
+        // USUARIO ADMINISTRADOR INICIAL
+        // =====================================================
+
+        const adminUsername = process.env.ADMIN_USERNAME;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        const adminNombre = process.env.ADMIN_NOMBRE || 'Administrador BITEL';
+
+        const adminResult = await pool.query(`
+            SELECT id
+            FROM usuarios
+            WHERE username = $1
+            LIMIT 1
+        `, [adminUsername || '']);
+
+        if (adminResult.rows.length === 0) {
+            if (!adminUsername || !adminPassword) {
+                throw new Error(
+                    'Faltan ADMIN_USERNAME y ADMIN_PASSWORD en el archivo .env para crear el usuario inicial.'
+                );
+            }
+
+            if (adminPassword.length < 10) {
+                throw new Error(
+                    'ADMIN_PASSWORD debe tener al menos 10 caracteres.'
+                );
+            }
+
+            const hash = await bcrypt.hash(adminPassword, 12);
+
+            await pool.query(`
+                INSERT INTO usuarios
+                (
+                    username,
+                    password_hash,
+                    nombre,
+                    rol,
+                    activo
+                )
+                VALUES ($1,$2,$3,'ADMIN',TRUE)
+            `, [
+                adminUsername,
+                hash,
+                adminNombre
+            ]);
+
+            console.log(`Usuario administrador inicial creado: ${adminUsername}`);
+        }
+
         console.log('Base de datos PostgreSQL conectada y lista.');
 
     } catch (error) {
@@ -84,11 +146,8 @@ async function initializeDatabase() {
             'Error inicializando la base de datos:',
             error.message
         );
-
         throw error;
     }
 }
 
-module.exports = {
-    initializeDatabase
-};
+module.exports = { initializeDatabase };
