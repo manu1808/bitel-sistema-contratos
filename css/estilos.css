@@ -1,0 +1,35 @@
+body {
+            background: #f4f5f7;
+        }
+
+        .navbar-bitel {
+            background: #111;
+        }
+
+        .dashboard-card {
+            border: none;
+            border-radius: 12px;
+        }
+
+        .dashboard-number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .estado {
+            font-weight: 600;
+        }
+
+        .documento-item {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+        }
+
+        .modal-header {
+            background: #111;
+            color: white;
+        }
