@@ -1,0 +1,127 @@
+<!-- ======================================================
+     MODAL DOCUMENTOS
+======================================================= -->
+
+<div
+    class="modal fade"
+    id="modalDocumentos"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Documentación del contrato
+                </h5>
+
+                <button
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div id="listaDocumentos"></div>
+
+
+                <hr>
+
+
+                <h6>
+                    Subir documentación
+                </h6>
+
+
+                <form id="formDocumento">
+
+                    <input
+                        type="hidden"
+                        id="documento_contrato_id"
+                    >
+
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <label class="form-label">
+                                Tipo
+                            </label>
+
+                            <select
+                                id="tipo_documento"
+                                class="form-select"
+                            >
+
+                                <option>
+                                    Contrato Primigenio
+                                </option>
+
+                                <option>
+                                    Adenda
+                                </option>
+
+                                <option>
+                                    DNI Propietario
+                                </option>
+
+                                <option>
+                                    Certificado Literal
+                                </option>
+
+                                <option>
+                                    Otros
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-5">
+
+                            <label class="form-label">
+                                Archivo
+                            </label>
+
+                            <input
+                                type="file"
+                                id="documento"
+                                class="form-control"
+                                accept="application/pdf"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-3 d-flex align-items-end">
+
+                            <button
+                                class="btn btn-warning w-100"
+                                type="submit"
+                            >
+                                Subir
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
