@@ -18,6 +18,7 @@ const documentosRouter = require('./routes/documentos');
 const dashboardRouter = require('./routes/dashboard');
 
 const app = express();
+app.set('trust proxy', 1);
 
 if (!process.env.SESSION_SECRET) {
     throw new Error('Falta SESSION_SECRET en el archivo .env');
